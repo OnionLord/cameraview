@@ -26,6 +26,8 @@ abstract class CameraViewImpl {
 
     protected final PreviewImpl mPreview;
 
+    protected int mJpegQuality = 100;
+
     CameraViewImpl(Callback callback, PreviewImpl preview) {
         mCallback = callback;
         mPreview = preview;
@@ -68,6 +70,8 @@ abstract class CameraViewImpl {
     abstract void takePicture();
 
     abstract void setDisplayOrientation(int displayOrientation);
+
+    abstract void setJpegQuality(int quality);
 
     interface Callback {
 

@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.os.ParcelableCompat;
 import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import java.lang.annotation.Retention;
@@ -76,6 +77,8 @@ public class CameraView extends FrameLayout {
     private boolean mAdjustViewBounds;
 
     private final DisplayOrientationDetector mDisplayOrientationDetector;
+
+    private int mJpegQuality = 100;
 
     public CameraView(Context context) {
         this(context, null);
@@ -130,6 +133,14 @@ public class CameraView extends FrameLayout {
             preview = new TextureViewPreview(context, this);
         }
         return preview;
+    }
+
+    public void setJpegQuality(int quality) {
+        mJpegQuality = quality;
+    }
+
+    public int getJpengQuality() {
+        return mJpegQuality;
     }
 
     @Override
@@ -235,10 +246,10 @@ public class CameraView extends FrameLayout {
             // Camera2 uses legacy hardware layer; fall back to Camera1
             mImpl = new Camera1(mCallbacks, createPreviewImpl(getContext()));
             onRestoreInstanceState(state);
+            mImpl.setJpegQuality(mJpegQuality);
             mImpl.start();
         }
     }
-
     /**
      * Stop camera preview and close the device. This is typically called from
      * {@link Activity#onPause()}.

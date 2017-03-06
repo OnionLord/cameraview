@@ -447,15 +447,19 @@ class Camera2 extends CameraViewImpl {
      * <p>The result will be continuously processed in {@link #mSessionCallback}.</p>
      */
     void startCaptureSession() {
+        Log.d("CAPTURESESSION", "STARTS");
         if (!isCameraOpened() || !mPreview.isReady() || mImageReader == null) {
             return;
         }
+        Log.d("CAPTURESESSION", "MID");
         Size previewSize = chooseOptimalSize();
         mPreview.setBufferSize(previewSize.getWidth(), previewSize.getHeight());
         Surface surface = mPreview.getSurface();
         try {
+            Log.d("CAPTURESESSION", "BUILDER");
             mPreviewRequestBuilder = mCamera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             mPreviewRequestBuilder.addTarget(surface);
+            mPreviewRequestBuilder.set(CaptureRequest.JPEG_QUALITY, (byte)mJpegQuality);
             mCamera.createCaptureSession(Arrays.asList(surface, mImageReader.getSurface()),
                     mSessionCallback, null);
         } catch (CameraAccessException e) {
@@ -732,4 +736,8 @@ class Camera2 extends CameraViewImpl {
 
     }
 
+    @Override
+    void setJpegQuality(int quality) {
+        mJpegQuality = quality;
+    }
 }

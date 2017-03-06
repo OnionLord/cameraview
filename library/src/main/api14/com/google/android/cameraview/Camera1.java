@@ -325,6 +325,8 @@ class Camera1 extends CameraViewImpl {
             mCameraParameters.setPreviewSize(size.getWidth(), size.getHeight());
             mCameraParameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
             mCameraParameters.setRotation(calcCameraRotation(mDisplayOrientation));
+            mCameraParameters.setJpegQuality(mJpegQuality);
+
             setAutoFocusInternal(mAutoFocus);
             setFlashInternal(mFlash);
             mCamera.setParameters(mCameraParameters);
@@ -424,4 +426,8 @@ class Camera1 extends CameraViewImpl {
         }
     }
 
+    @Override
+    void setJpegQuality(int quality) {
+        mJpegQuality = quality;
+    }
 }

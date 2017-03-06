@@ -57,7 +57,7 @@ import java.util.Set;
  */
 public class MainActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback,
-        AspectRatioFragment.Listener {
+        AspectRatioFragment.Listener, JpegQualityFragment.Listener {
 
     private static final String TAG = "MainActivity";
 
@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
         }
+
         FloatingActionButton takePicture = (FloatingActionButton) findViewById(R.id.take_picture);
         if (takePicture != null) {
             takePicture.setOnClickListener(mOnClickListener);
@@ -195,6 +196,12 @@ public class MainActivity extends AppCompatActivity implements
                             .show(getSupportFragmentManager(), FRAGMENT_DIALOG);
                 }
                 break;
+            case R.id.jpeg_quality:
+                if (mCameraView != null) {
+                    JpegQualityFragment.newInstance(mCameraView.getJpengQuality())
+                            .show(getSupportFragmentManager(), FRAGMENT_DIALOG);
+                }
+                break;
             case R.id.switch_flash:
                 if (mCameraView != null) {
                     mCurrentFlash = (mCurrentFlash + 1) % FLASH_OPTIONS.length;
@@ -219,6 +226,15 @@ public class MainActivity extends AppCompatActivity implements
         if (mCameraView != null) {
             Toast.makeText(this, ratio.toString(), Toast.LENGTH_SHORT).show();
             mCameraView.setAspectRatio(ratio);
+        }
+    }
+
+    @Override
+    public void onJpegQualitySelected(@NonNull int quality) {
+        if (mCameraView != null) {
+            Toast.makeText(this, "JPEG Quality : " + Integer.toString(quality), Toast.LENGTH_SHORT).show();
+            mCameraView.setJpegQuality(quality);
+            mCameraView.start();
         }
     }
 
@@ -254,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements
                 public void run() {
                     File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                             "picture.jpg");
+
                     OutputStream os = null;
                     try {
                         os = new FileOutputStream(file);
